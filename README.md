@@ -1,10 +1,10 @@
-# 💳 Payment Gateway Backend System
+# Payment Gateway Backend System
 
 This is a modular, microservices-based backend system for simulating an **e-commerce payment gateway**, built entirely in **Java (Spring Boot)**. It consists of four independently functioning services that simulate real-world financial transaction flows between a customer, vendor, bank, and payment processor.
 
 ---
 
-## 📊 Microservice Overview
+## Microservice Overview
 
 | Microservice             | Description                                                           |
 | ------------------------ | --------------------------------------------------------------------- |
@@ -17,7 +17,7 @@ Each service is standalone and contains its own Spring Boot application, `pom.xm
 
 ---
 
-## 📚 Project Structure
+## Project Structure
 
 ```
 payment-gateway-backend/
@@ -30,7 +30,7 @@ payment-gateway-backend/
 
 ---
 
-## 🎓 Technologies Used
+## Technologies Used
 
 * Java 11+
 * Spring Boot (Web, MVC)
@@ -41,7 +41,7 @@ payment-gateway-backend/
 
 ---
 
-## ⚙️ How to Run Each Service
+## How to Run Each Service
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ Each service runs independently on its own port (configured in `application.prop
 
 ---
 
-## 📉 Example Flow
+## Example Flow
 
 1. **VendorApp** displays product and collects payment request.
 2. **MerchantServer** processes the request and forwards to **PaymentGatewayServer**.
@@ -71,7 +71,7 @@ Each service runs independently on its own port (configured in `application.prop
 
 ---
 
-## 🔗 API Communication Map
+## API Communication Map
 
 ```text
 VendorApp
@@ -87,12 +87,12 @@ All communication is RESTful and uses JSON.
 
 ---
 
-## 👩‍💼 Author
+## Author
 
 **Shubham Kanse**
 
 ---
 
-## 📄 License
+## License
 
 This repository is intended for academic, demonstration, and portfolio purposes only.
