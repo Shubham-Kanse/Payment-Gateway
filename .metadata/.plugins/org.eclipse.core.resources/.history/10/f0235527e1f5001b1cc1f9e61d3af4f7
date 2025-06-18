@@ -1,0 +1,60 @@
+package com.ravenclaw;
+//this will generate unique value
+import java.util.Date;
+import java.util.Map;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.ravenclaw.model.MerchantStatus;
+
+@RestController
+public class MerchantController {
+	
+	 MerchantStatus ms=new MerchantStatus();
+	    //Generating unique id and sending back to vendor 
+	    @PostMapping("/collect/{name}/{amt}/{date}")
+	    public String collectUserInfo(@PathVariable("name") String name,@PathVariable("amt") String amt,@PathVariable("date") String date ) {
+		//long millis = date.getTime();
+        System.out.println(" Calling from vendorapp to merchantserver");
+		int y=(int)(Math.random()*100000000);
+		String t=name.substring(0, 3).toUpperCase()+y+date;
+		return t;
+	}
+
+		
+	    //status check api
+	    //code to be executed after the getting transaction status from merchant website
+		@PostMapping("/vserver/statuscheck")
+		public void statusCheckApi(@RequestBody String status) {
+			ms.setVendorStatus(status);
+			System.out.println(status);
+			RestTemplate restTemplate = new RestTemplate();
+			String baseurl = "http://localhost:8072";
+			HttpEntity<String>entity = new HttpEntity<String>(status);
+			restTemplate.postForObject(baseurl + "/pgserver/statuscheck",entity,String.class);
+		}
+		
+		
+		
+		
+		
+		
+	    //txn verification on merchant side
+	    //code to be executed on receiving final status and txn id from pg-server
+		@PostMapping("/vserver/verifytransaction")
+		public void verifyTransaction(@RequestBody Map<String,String> map) {
+			if(map.get("status").equals(ms.getVendorStatus())) {
+				//go to merchant website
+				RestTemplate restTemplate = new RestTemplate();
+				HttpEntity<Map<String,String>> entity = new HttpEntity<Map<String,String>>(map);
+				restTemplate.postForObject("http://localhost:8070/vendor/finalstatus",entity,String.class);
+			}
+		}    
+
+
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
+body {
+  user-select: none;
+  margin: 0;
+  padding:0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120vh;
+  width: 110vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  font-family: 'Oxygen', sans-serif;
+  background-image: url('bg1.jpg');
+  background-size: 100% 100%;
+}
+
+h {
+  font-size: 0.9em;
+  padding: 10px;
+  color: #1f1f1f;
+  text-transform: uppercase;
+}
+p {
+  color: white;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 5px;
+  margin:0;
+}
+.card-wrapper {
+  height: 350px;
+  width: 400px;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  border: 1px solid #C0C0C0;
+  background: white;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 350px;
+  border-left: 1px solid #C0C0C0;
+  border-right: 1px solid #C0C0C0;
+  border-bottom: 1px solid #C0C0C0;
+  border-radius: 15px;
+}
+.heading {
+  width: 90%; 
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.form-card-number , .form-card-holder, .form-bottom{
+  height: 50px;
+  width: 90%;
+  border-radius: 5px;
+  border: 1px solid #C0C0C0;
+}
+
+.form-submit {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#submit {
+  height: 40px;
+  width: 180px;
+  border-radius: 5px;
+  margin: 30px;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  background: #03A9F4;
+}
+input {
+  height: 35px;
+  width: 95%;
+  outline: none;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+<div class="card-wrapper">
+    
+<form class="form" action="/vendor" method="get">
+
+
+     
+    	
+      <h1>CHECKOUT</h1>
+      <div class="heading">
+        <h>Enter Amount</h>
+      </div>
+      <div class="form-card-number">
+        <input type="text" id="input-number"  name="amount" required />
+      </div>
+      <div class="heading">
+        <h>Enter Name</h>
+      </div>
+      <div class="form-card-holder">
+        <input type="text" id="input-name" name="name" required />
+      </div>
+      <div class="heading">
+        <h>Select date</h>
+      </div>
+      <div class="form-card-holder">
+        <input type="date" id="input-date" name="date" required />
+      </div>
+      
+      <div class="heading">
+        
+      <div class="form-submit">
+        <button id="submit" value="submit">Pay</button>
+      </div>
+  </div>
+  </div>
+
+
+<!-- <input type="text" name="name" >
+<input type="number" name="amount" id="amount">
+<input type="date" name="date" id="date">
+
+<input type="submit"  value="Proceed" />
+ -->
+</form>
+
+
+
+</body>
+
+</html>

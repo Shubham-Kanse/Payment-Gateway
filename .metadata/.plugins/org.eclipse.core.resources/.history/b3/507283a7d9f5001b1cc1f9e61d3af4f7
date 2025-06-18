@@ -1,0 +1,244 @@
+package com.ravenclaw.service;
+
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+import com.ravenclaw.model.bankEntity;
+import com.ravenclaw.repository.bankRepository;
+
+
+
+@Service
+public class bankService {
+
+	@Autowired
+	bankRepository repo;
+	
+	@Autowired
+	JavaMailSender javaMailSender;
+
+	bankEntity ref;
+	
+	public static int random;
+	public static int time = 0;
+	int i;
+	Timer timer;
+	TimerTask task;
+	
+	
+	public boolean cardVerification(bankEntity input)
+	{
+		ref=repo.findBycardNumber(input.getCardNumber());
+		System.out.println(ref);
+		//System.out.println(ref.getName()+" "+ ref.getCardType()+" "+ ref.getCardNumber()+ " "+ref.getExpiryDate()+" "+ ref.getCvv());
+		System.out.println(input.getExpiryDate()+"amount"+input.getBalance()+"name "+input.getName());
+	
+		
+	
+		
+		if(ref != null)
+		{
+			if(ref.getBalance()>=input.getBalance())
+			{
+				
+				if(ref.getName().equals(input.getName()) && ref.getCardNumber().equals(input.getCardNumber()) && ref.getCardType().equals(input.getCardType()) && ref.getExpiryDate().equals(input.getExpiryDate()) && ref.getCvv()==input.getCvv())
+				{
+					System.out.println("success");
+					return true;
+				}
+				else 
+				{
+					System.out.println("Failed");
+					return false;
+				}
+			}
+			else 
+			{
+				System.out.println("Balance is less");
+				return false;
+			}
+			
+		}
+		else
+		{
+			System.out.println("ref is null");
+			return false;
+		}
+	}
+	
+	public boolean balancecheckmin(int amount)
+	{
+		if(ref.getBalance()>=amount)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public bankEntity code(){
+		int n=6;
+		
+		int min = 100000;
+		int max = 999999;
+		random = (int)(Math.random() * (max - min + 1) + min);
+		
+		
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(ref.getEmail());
+		msg.setSubject("Transaction OTP");
+		msg.setText("Your OTP is: " + random + " Your OTP will expire in 5 Minutes");
+		javaMailSender.send(msg);
+
+		timer = new Timer();
+		task = new TimerTask() {
+			public void run() {
+				time++;
+				//System.out.println(time);
+			}
+		};
+		timer.scheduleAtFixedRate(task, 1000, 1000);
+		
+		return ref;
+	}
+	
+	
+	
+	
+public boolean validateOtp(int otpv) {
+
+		
+		if (otpv==random && time < 300) {
+			System.out.println("matched");
+			time = 0;
+			timer.cancel();
+			return true;
+
+		} else {
+			System.out.println("not");
+			time = 0;
+			timer.cancel();
+			return false;
+		}
+	}
+public void debited(int balance, BigInteger cardnumber) 
+{
+	System.out.println(balance);
+	bankEntity debit = repo.findBycardNumber(cardnumber);
+	int bal = debit.getBalance();
+	System.out.println(bal);
+	int updatedbal = bal - balance;
+	System.out.println(updatedbal);
+	debit.setBalance(updatedbal);
+	repo.save(debit);
+}
+
+public boolean validateData(bankEntity input) {
+	// TODO Auto-generated method stub
+	if( validatename(input.getName()) &&  is16dig(input.getCardNumber()) && ValidDate(input.getExpiryDate()) && isLess(input.getCvv()) )
+	{
+		return true;
+	}
+	
+	else {
+		return false;
+		
+	}
+	
+	
+}
+
+public boolean validatename(String name) {
+
+	String  regex = "^[a-zA-z\\s]+$";
+	Pattern p = Pattern.compile(regex);
+	if (name == null)
+	{
+		return false;
+	}
+	Matcher m = p.matcher(name);
+	return m.matches();
+}
+
+public boolean isLess(int cvv) {
+	boolean flag = false;
+	int num = (cvv);
+	if (num < 1000) {
+		flag = true;
+	System.out.println("correct cvv");
+	}else System.out.println("incorrect cvv");
+
+	
+	
+	
+	return flag;
+
+}
+
+public  boolean is16dig( BigInteger num) {
+	boolean flag=false;
+	int len=String.valueOf(num).length();
+	if(len==16)
+	{
+		System.out.println("len of card: "+len);
+		flag=true;
+	}
+	return flag;
+}
+public boolean ValidDate(String expdate)  {
+
+	System.out.println("okay");
+	boolean flag = false;
+
+	String spl[]=expdate.split("/");
+	
+	int mon=Integer.parseInt(spl[0]);
+	int yr=Integer.parseInt(spl[1]);
+
+     Date d2 = new Date();
+     int d2mon=d2.getMonth()+1;
+     int d2yr=d2.getYear()+1900;
+
+  
+ // Compare the dates using compareTo()
+     if (mon==d2mon && yr==d2yr) {
+
+         // When Date d1 = Date d2
+         System.out.println("Date1 is equal Date2");
+    flag=true;
+     }
+
+     else if (yr>d2yr) {
+
+         // When Date d1 > Date d2
+         System.out.println("Date1 is after Date2");
+     flag=true;
+     }
+
+     else  {
+
+      // When Date d1 < Date d2
+         System.out.println("Date1 is before Date2");
+     flag=false;
+     }
+     
+ if(flag==false) {
+	 System.out.println("card is expired or invalid");
+ }else if(flag==true) {
+	 System.out.println("card is valid");
+ }
+ 
+	return flag;
+
+}
+
+
+}
